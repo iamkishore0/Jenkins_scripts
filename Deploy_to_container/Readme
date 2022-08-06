@@ -1,1 +1,10 @@
-.
+Required servers
+ 1.Jenkins
+ 2.Tomcat
+
+Required Plugins to run this script
+ 1.GIT
+ 2.Maven
+ 3.Deploy to container
+ 
+Change the tomcat url and credentials as per your requirements 
