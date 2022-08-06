@@ -1,1 +1,10 @@
-.
+Required servers
+ 1.Jenkins
+ 2.Sonarqube
+
+Required Plugins to run this script
+ 1.GIT
+ 2.Maven
+ 3.SonarQube server
+ 
+Change the sonarqube url and credentials as per your requirements 
