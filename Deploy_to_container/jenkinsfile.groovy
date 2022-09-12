@@ -1,10 +1,14 @@
 pipeline {
     agent any
+    
+    tools {
+        maven "mvn"
+    }
 
     stages {
-        stage('git_clone') {
+        stage('Git_clone') {
             steps {
-                git branch: 'main', url: 'https://github.com/devopslife999/HelloWorld.git'
+                git branch: 'main', url: 'https://github.com/iamkishore0/maven_project.git'
             }
         }
         stage('Build_with_maven') {
@@ -12,9 +16,9 @@ pipeline {
                 sh 'mvn install'
             }
         }
-        stage('Deploy_to_tomcat_container') {
+        stage ('deploy_to_container') {
             steps {
-                deploy adapters: [tomcat8(credentialsId: 'tomcat', path: '', url: 'http://localhost:8082')], contextPath: null, war: '**/*.war'
+                deploy adapters: [tomcat8(credentialsId: 'tomcat', path: '', url: 'http://54.218.134.45:8080')], contextPath: null, war: '**/*.war'
             }
         }
     }
