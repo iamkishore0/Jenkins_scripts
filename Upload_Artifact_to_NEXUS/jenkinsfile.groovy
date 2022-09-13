@@ -1,20 +1,25 @@
 pipeline {
     agent any
+    
+     tools {
+        maven "mvn"
+    }
 
     stages {
-        stage('git_clone') {
+        stage('Git_clone') {
             steps {
-                git branch: 'main', url: 'https://github.com/devopslife999/HelloWorld.git'
+                git branch: 'main', url: 'https://github.com/iamkishore0/maven_project.git'
             }
         }
-        stage('Build_with_maven') {
+        stage ('mvn') {
             steps {
                 sh 'mvn install'
             }
         }
-        stage('Upload_Artifact_to_Nexus') {
+        stage ('upload_to_nexus') {
             steps {
-                nexusArtifactUploader artifacts: [[artifactId: '$BUILD_TIMESTAMP', classifier: '', file: 'helloworld/target/helloworld.war', type: 'war']], credentialsId: 'nexus', groupId: 'mygroup', nexusUrl: 'localhost:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'helloworld', version: '$BUILD_ID'
+                nexusArtifactUploader artifacts: [[artifactId: '$BUILD_TIMESTAMP', classifier: '', file: '/var/lib/jenkins/workspace/CI1/webapp/target/webapp.war', type: 'war']], credentialsId: 'tomcat_credentials', groupId: 'mygroup', nexusUrl: '3.134.93.135:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'mygroup', version: '$BUILD_ID'
+                
             }
         }
     }
