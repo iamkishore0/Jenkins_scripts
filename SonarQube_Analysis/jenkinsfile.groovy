@@ -16,7 +16,7 @@ pipeline {
 
             steps {
 
-                git 'https://github.com/devopslife999/HelloWorld'
+                git branch: 'main', url: 'https://github.com/iamkishore0/maven_project.git'
 
             }
 
@@ -45,15 +45,10 @@ pipeline {
              withSonarQubeEnv('sonarqube'){
 
                  sh "${scannerHome}/bin/sonar-scanner \
-
-                  -Dsonar.login=<sonarcloud_token> \
-
+                  -Dsonar.login=<sonar_token> \
                   -Dsonar.host.url=https://sonarcloud.io \
-
-                  -Dsonar.organization=<organization_name> \
-
-                  -Dsonar.projectKey=<organization_key> \
-
+                  -Dsonar.organization=<organisation_name> \
+                  -Dsonar.projectKey=<organisation_key> \
                   -Dsonar.java.binaries=./ "
 
                 }
@@ -63,5 +58,4 @@ pipeline {
         }
 
     }
-
 }
