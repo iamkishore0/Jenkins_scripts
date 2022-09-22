@@ -23,4 +23,4 @@ Repository: <name of repository which is created in nexus>
 Select Artifacts
 Artifactid: $BUILD_TIMESTAMP
 Type: war
-File: <path of the war file> 
+File: <path of the war file>  - example: /var/lib/jenkins/workspace/<JOB_NAME>/webapp/target/webapp.war
