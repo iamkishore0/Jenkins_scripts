@@ -2,7 +2,7 @@
    Go to manage Jenkins >> Manage Users >> Create User
     
 ## Install Role-based-Authorization-strategy
-   Go to manage jenkins >> plugins >> Available - search for Role-based-Authorization-strategy and install it
+   Go to manage jenkins >> plugins >> Available - search for Role-based Authorization strategy and install it
    
 ## Enable Role-Based-Strategy
    Go to manage jenkins >> Configure Global Security >> Authorization - select Role-Based-Strategy >> Apply & Save
