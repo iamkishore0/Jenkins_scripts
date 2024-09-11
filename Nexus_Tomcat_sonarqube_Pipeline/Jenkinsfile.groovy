@@ -14,11 +14,6 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/iamkishore0/maven_project.git'
             }
         }
-        stage ('Build_with_Maven') {
-            steps {
-                sh 'mvn install'
-            }
-        }
         stage('sonar_code_analysis') {
             environment {
                 scannerHome = tool 'sonarqube'
@@ -34,6 +29,12 @@ pipeline {
                 }
             }
         }
+        stage ('Build_with_Maven') {
+            steps {
+                sh 'mvn install'
+            }
+        }
+        
         stage ('Nexus_Artifact_uploader') {
             steps {
                 nexusArtifactUploader artifacts: [[artifactId: '$BUILD_TIMESTAMP', classifier: '', file: '/var/lib/jenkins/workspace/Complete_Pipeline/webapp/target/webapp.war', type: 'war']], credentialsId: 'nexus_tomcat', groupId: 'srinivas', nexusUrl: '54.226.245.6:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'srinivas', version: '$BUILD_ID'
