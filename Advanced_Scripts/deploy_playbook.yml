@@ -1,0 +1,24 @@
+- name: Deploy Application to EKS
+  hosts: eks_cluster
+  gather_facts: no
+  tasks:
+    - name: Ensure kubectl is installed
+      command: which kubectl
+      register: kubectl_installed
+      ignore_errors: yes
+
+    - name: Install kubectl if not present
+      shell: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        mv kubectl /usr/local/bin/
+      when: kubectl_installed.rc != 0
+
+    - name: Apply Kubernetes Deployment
+      command: kubectl apply -f deployment.yaml
+
+    - name: Apply Kubernetes Service
+      command: kubectl apply -f service.yaml
+
+    - name: Verify Deployment
+      command: kubectl rollout status deployment/cycle-shopping-deployment
