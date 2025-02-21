@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+    environment {
+        REPO_URL = 'https://github.com/iamkishore0/maven_project_cycle_shopping.git'
+        BRANCH = 'main'
+        SONARQUBE_URL = 'http://your-sonarqube-server' // Update this
+        SONARQUBE_TOKEN = credentials('sonarqube-token')
+        AWS_CREDENTIALS = credentials('aws-credentials')
+        DOCKER_IMAGE = 'your-docker-image:latest' // Update with your image repo
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: BRANCH, url: REPO_URL
+            }
+        }
+        
+        stage('Code Quality Analysis') {
+            steps {
+                script {
+                    try {
+                        sh "mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_TOKEN"
+                    } catch (Exception e) {
+                        mail to: 'your-email@example.com', subject: 'Pipeline Failed: Code Quality', body: 'Code did not meet quality standards'
+                        error 'Code quality check failed'
+                    }
+                }
+            }
+        }
+        
+        stage('Build Application') {
+            steps {
+                script {
+                    try {
+                        sh 'mvn clean package'
+                    } catch (Exception e) {
+                        mail to: 'your-email@example.com', subject: 'Pipeline Failed: Build Error', body: 'Maven build failed'
+                        error 'Maven build failed'
+                    }
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $DOCKER_IMAGE .'
+            }
+        }
+        
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
+                    sh 'docker push $DOCKER_IMAGE'
+                }
+            }
+        }
+        
+        stage('Provision Infrastructure') {
+            steps {
+                script {
+                    sh '''
+                    cd terraform
+                    terraform init
+                    terraform apply -auto-approve
+                    '''
+                }
+            }
+        }
+        
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    sh '''
+                    ansible-playbook -i ansible/inventory ansible/deploy.yml
+                    '''
+                }
+            }
+        }
+    }
+}
